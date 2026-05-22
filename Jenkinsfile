@@ -9,7 +9,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                 git branch: 'main', url: 'https://github.com/adityamandourney17/sample-app.git'
+                git branch: 'main', url: 'https://github.com/adityamandourney17/sample-app.git'
             }
         }
 
@@ -24,13 +24,14 @@ pipeline {
 
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
+                    usernameVariable: 'DOCKER_USERNAME',
+                    passwordVariable: 'DOCKER_PASSWORD'
                 )]) {
 
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-
-                    sh 'docker push $IMAGE_NAME'
+                    sh '''
+                    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                    docker push $IMAGE_NAME
+                    '''
                 }
             }
         }
